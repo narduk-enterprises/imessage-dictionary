@@ -26,9 +26,21 @@ export default defineNuxtConfig({
   },
 
   runtimeConfig: {
+    // Server-only (admin API routes)
+    googleServiceAccountKey: process.env.GSC_SERVICE_ACCOUNT_JSON || '',
+    posthogApiKey: process.env.POSTHOG_PERSONAL_API_KEY || '',
+    gaPropertyId: process.env.GA_PROPERTY_ID || '',
+    posthogProjectId: process.env.POSTHOG_PROJECT_ID || '',
     public: {
       appUrl: process.env.SITE_URL || 'https://nuxt-v4-template.workers.dev',
-      appName: 'Nuxt 4 Demo'
+      appName: process.env.APP_NAME || 'Nuxt 4 Demo',
+      // Analytics
+      posthogPublicKey: process.env.POSTHOG_PUBLIC_KEY || '',
+      posthogHost: process.env.POSTHOG_HOST || 'https://us.i.posthog.com',
+      gaMeasurementId: process.env.GA_MEASUREMENT_ID || '',
+      posthogProjectId: process.env.POSTHOG_PROJECT_ID || '',
+      // IndexNow
+      indexNowKey: process.env.INDEXNOW_KEY || '',
     }
   },
 

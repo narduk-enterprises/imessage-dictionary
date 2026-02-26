@@ -114,3 +114,14 @@ Run these during development (Antigravity slash-commands, or manually follow the
 | `/check-nuxt-ssr`         | Validates SSR-safe data fetching and hydration      |
 | `/check-store-separation` | Validates thin component / thick composable pattern |
 | `/check-nitro-edge`       | Validates Cloudflare Workers compatibility          |
+
+## Analytics & SEO
+
+This template ships with **PostHog**, **GA4**, **Google Search Console**, and **IndexNow** — all wired up and ready to go. Universal management keys live in the **`narduk-analytics`** Doppler project.
+
+**See [AGENT_ANALYTICS.md](./AGENT_ANALYTICS.md) for the full setup guide**, including:
+
+- Doppler two-tier architecture (`narduk-analytics` → per-app project)
+- `npm run setup:all` one-command bootstrap
+- Environment variable reference
+- How each plugin/route works
