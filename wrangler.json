@@ -13,11 +13,11 @@
   "d1_databases": [
     {
       "binding": "DB",
-      "database_name": "imessage-dictionary-db",
-      "database_id": "7f4b25dc-df31-4bb6-bd51-0cb087cb5201"
+      "database_name": "dict-nard-uk-db",
+      "database_id": "9470aa0e-ecb7-476a-92a1-5576b7f92ce4"
     }
   ],
   "routes": [
-    { "pattern": "dict.nard.uk", "custom_domain": true }
+    { "pattern": "dictionary.nard.uk", "custom_domain": true }
   ]
 }

@@ -22,12 +22,16 @@ const toast = useToast()
 useSeoMeta({
   title: () => entry.value ? `${entry.value.term} — iMessage Dictionary` : `${term.value} — Word not found`,
   description: () => entry.value?.senses?.[0]?.gloss || `Definition for ${term.value}`,
-  ogTitle: () => entry.value ? `${entry.value.term} — definition` : term.value,
-  ogDescription: () => entry.value?.senses?.[0]?.gloss || 'Word not found',
-  ogType: 'website',
-  ogImage: () => entry.value ? `/api/og/${encodeURIComponent(entry.value.term)}` : undefined,
   twitterCard: 'summary_large_image',
 })
+
+if (entry.value) {
+  defineOgImageComponent('OgImageDefaultTakumi', {
+    title: entry.value.term,
+    description: entry.value.senses?.[0]?.gloss || '',
+    pos: entry.value.senses?.[0]?.pos || '',
+  })
+}
 
 function getShareUrl(senseIdx?: number) {
   const base = `/w/${encodeURIComponent(entry.value?.term || term.value)}`
@@ -83,124 +87,145 @@ async function copySenseLink(index: number) {
   <div class="min-h-screen">
     <div class="max-w-4xl mx-auto px-6 py-12">
       <!-- Back button -->
-      <UButton
-        variant="ghost"
-        icon="i-lucide-arrow-left"
+      <NuxtLink
         to="/"
-        class="mb-8"
+        class="inline-flex items-center gap-2 text-[#6b5e50] hover:text-[#1a2744] transition-colors mb-8"
       >
-        Back to Home
-      </UButton>
+        <UIcon name="i-lucide-arrow-left" class="size-4" />
+        <span class="text-sm font-medium">Back to Home</span>
+      </NuxtLink>
 
       <!-- Loading -->
       <div v-if="status === 'pending'" class="flex items-center justify-center py-24">
-        <UIcon name="i-lucide-loader-2" class="size-12 animate-spin text-[var(--color-primary-500)]" />
+        <UIcon name="i-lucide-loader-2" class="size-12 animate-spin text-[#d97706]" />
       </div>
 
       <!-- Word Not Found -->
-      <UCard v-else-if="!entry" class="text-center py-12">
-        <UIcon name="i-lucide-book-open" class="size-16 mx-auto mb-4 text-[var(--color-neutral-400)]" />
-        <h1 class="font-serif text-3xl font-bold mb-4">
+      <div v-else-if="!entry" class="text-center py-12 bg-white border border-[#d4c9b8] rounded-xl p-8">
+        <UIcon name="i-lucide-book-open" class="size-16 mx-auto mb-4 text-[#d4c9b8]" />
+        <h1 class="font-serif text-3xl font-bold text-[#1a2744] mb-4">
           Word Not Found
         </h1>
-        <p class="text-lg text-[var(--color-neutral-500)] mb-6">
+        <p class="text-lg text-[#6b5e50] mb-6">
           We couldn't find a definition for "{{ term }}".
         </p>
 
         <div v-if="suggestions?.results?.length" class="mb-6">
-          <p class="text-sm uppercase tracking-wider text-[var(--color-neutral-500)] mb-3">
+          <p class="text-sm uppercase tracking-wider text-[#8a8078] mb-3">
             Suggestions
           </p>
           <div class="flex flex-wrap justify-center gap-2">
-            <UButton
+            <NuxtLink
               v-for="s in suggestions.results"
               :key="s.term"
-              variant="outline"
-              size="sm"
               :to="`/w/${encodeURIComponent(s.term)}`"
+              class="px-3 py-1.5 bg-white border border-[#d4c9b8] rounded-lg text-sm font-medium text-[#1a2744] hover:border-[#d97706] transition-colors"
             >
               {{ s.term }}
-            </UButton>
+            </NuxtLink>
           </div>
         </div>
 
-        <UButton to="/">
+        <NuxtLink
+          to="/"
+          class="inline-flex items-center gap-2 px-6 py-2.5 bg-[#1a2744] text-white font-semibold rounded-xl hover:bg-[#0f1a30] transition-colors"
+        >
           Search for another word
-        </UButton>
-      </UCard>
+        </NuxtLink>
+      </div>
 
       <!-- Word Detail -->
       <template v-else>
         <article class="mb-8">
           <header class="mb-8">
-            <h1 class="font-serif text-5xl md:text-6xl font-bold text-[var(--color-primary-500)] tracking-tight">
+            <h1 class="font-serif text-5xl md:text-6xl font-bold text-[#1a2744] tracking-tight">
               {{ entry.term }}
             </h1>
           </header>
 
           <!-- Senses -->
           <div class="space-y-6">
-            <UCard
+            <div
               v-for="(sense, index) in entry.senses"
               :key="index"
-              :class="{ 'ring-2 ring-[var(--color-primary-400)]': index === activeSenseIndex }"
+              class="bg-white border-2 rounded-xl p-6 cursor-pointer transition-colors"
+              :class="index === activeSenseIndex ? 'border-[#d97706]' : 'border-[#d4c9b8] hover:border-[#d97706]/50'"
               @click="activeSenseIndex = index"
             >
               <div class="flex justify-between items-start">
                 <div class="flex-1">
-                  <div v-if="sense.pos" class="text-sm uppercase tracking-widest text-[var(--color-primary-500)] font-medium mb-3">
+                  <div v-if="sense.pos" class="text-sm uppercase tracking-widest text-[#d97706] font-semibold mb-3">
                     {{ sense.pos }}
                   </div>
-                  <p class="font-serif text-xl leading-relaxed mb-4">
+                  <p class="font-serif text-xl leading-relaxed text-[#1a2744] mb-4">
                     {{ sense.gloss }}
                   </p>
-                  <div v-if="sense.example" class="pl-4 border-l-4 border-[var(--color-primary-200)]">
-                    <p class="font-serif text-lg italic text-[var(--color-neutral-500)]">
+                  <div v-if="sense.example" class="pl-4 border-l-4 border-[#d97706]/30">
+                    <p class="font-serif text-lg italic text-[#6b5e50]">
                       "{{ sense.example }}"
                     </p>
                   </div>
                 </div>
-                <UButton
+                <button
                   v-if="entry.senses.length > 1"
-                  variant="ghost"
-                  icon="i-lucide-copy"
-                  size="sm"
-                  class="ml-2"
+                  class="ml-2 p-2 text-[#8a8078] hover:text-[#d97706] transition-colors"
                   title="Copy link to this definition"
                   @click.stop="copySenseLink(index)"
-                />
+                >
+                  <UIcon name="i-lucide-copy" class="size-4" />
+                </button>
               </div>
-            </UCard>
+            </div>
           </div>
         </article>
 
         <!-- Share Buttons -->
         <div class="flex flex-col sm:flex-row gap-3 mb-8">
-          <UButton
-            size="lg"
-            icon="i-lucide-copy"
-            class="flex-1"
+          <button
+            class="flex-1 inline-flex items-center justify-center gap-2 px-6 py-3 bg-[#1a2744] hover:bg-[#0f1a30] text-white font-semibold rounded-xl transition-colors"
             @click="copyLink"
           >
+            <UIcon name="i-lucide-copy" class="size-5" />
             Copy Link
-          </UButton>
-          <UButton
-            size="lg"
-            icon="i-lucide-share"
-            variant="soft"
-            class="flex-1"
+          </button>
+          <button
+            class="flex-1 inline-flex items-center justify-center gap-2 px-6 py-3 bg-[#d97706] hover:bg-[#b45309] text-white font-semibold rounded-xl transition-colors"
             @click="shareWord"
           >
+            <UIcon name="i-lucide-share" class="size-5" />
             Share
-          </UButton>
+          </button>
         </div>
 
+        <!-- iMessage Preview -->
+        <section class="mb-8">
+          <h2 class="text-sm uppercase tracking-wider text-[#8a8078] mb-3 font-medium">
+            iMessage Preview
+          </h2>
+          <div class="bg-[#e8e2d8] rounded-xl p-6 border border-[#d4c9b8]">
+            <div class="bg-white rounded-lg p-6 shadow-sm max-w-lg">
+              <div class="flex items-center gap-3 mb-3">
+                <span class="font-serif text-3xl font-bold text-[#1a2744]">{{ entry.term }}</span>
+                <span v-if="entry.senses[activeSenseIndex]?.pos" class="px-2 py-0.5 bg-[#f5f1e8] border border-[#d4c9b8] rounded text-xs font-semibold uppercase text-[#8a8078]">
+                  {{ entry.senses[activeSenseIndex].pos }}
+                </span>
+              </div>
+              <p class="font-serif text-lg text-[#2d3748] leading-relaxed">
+                {{ entry.senses[activeSenseIndex]?.gloss }}
+              </p>
+              <div class="mt-4 pt-3 border-t border-[#ece5d8]">
+                <span class="text-xs text-[#8a8078]">dictionary.nard.uk</span>
+              </div>
+            </div>
+          </div>
+        </section>
+
         <!-- Source Attribution -->
-        <footer class="pt-8 border-t border-[var(--color-neutral-200)] dark:border-[var(--color-neutral-800)]">
-          <p class="text-sm text-[var(--color-neutral-500)]">
+        <footer class="pt-8 border-t border-[#d4c9b8]">
+          <p class="text-sm text-[#8a8078]">
             Source: {{ entry.source }} • {{ entry.license }}
             <br>
-            <NuxtLink to="/attribution" class="text-[var(--color-primary-500)] hover:underline">
+            <NuxtLink to="/attribution" class="text-[#d97706] hover:underline">
               View full attribution
             </NuxtLink>
           </p>

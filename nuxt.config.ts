@@ -4,7 +4,6 @@ export default defineNuxtConfig({
     '@nuxt/ui',
     '@nuxt/fonts',
     '@nuxt/image',
-    '@nuxt/content',
     '@nuxtjs/seo',
     '@nuxt/eslint',
   ],
@@ -22,8 +21,15 @@ export default defineNuxtConfig({
     colorMode: true
   },
 
+  fonts: {
+    families: [
+      { name: 'Crimson Pro', weights: [400, 500, 600, 700], global: true },
+      { name: 'Inter', weights: [300, 400, 500, 600, 700], global: true },
+    ],
+  },
+
   colorMode: {
-    preference: 'dark'
+    preference: 'light'
   },
 
   runtimeConfig: {
@@ -34,7 +40,7 @@ export default defineNuxtConfig({
     gaPropertyId: process.env.GA_PROPERTY_ID || '',
     posthogProjectId: process.env.POSTHOG_PROJECT_ID || '',
     public: {
-      appUrl: process.env.SITE_URL || 'https://dict.nard.uk',
+      appUrl: process.env.SITE_URL || 'https://dictionary.nard.uk',
       appName: process.env.APP_NAME || 'iMessage Dictionary',
       // Analytics
       posthogPublicKey: process.env.POSTHOG_PUBLIC_KEY || '',
@@ -52,7 +58,7 @@ export default defineNuxtConfig({
   // these via the `useSeo()` composable.
 
   site: {
-    url: process.env.SITE_URL || 'https://dict.nard.uk',
+    url: process.env.SITE_URL || 'https://dictionary.nard.uk',
     name: 'iMessage Dictionary',
     description: 'Look up words and share beautiful OG preview cards in iMessage. Over 200 curated definitions with one-tap sharing.',
     defaultLocale: 'en',
@@ -80,18 +86,6 @@ export default defineNuxtConfig({
     },
   },
 
-  content: {
-    // @nuxt/content v3 — edge-compatible, SQL-based storage
-    build: {
-      markdown: {
-        toc: { depth: 3 },
-        highlight: {
-          langs: ['typescript', 'vue', 'bash', 'json', 'css', 'html'],
-        },
-      },
-    },
-  },
-
   sitemap: {},
 
   robots: {
@@ -114,26 +108,14 @@ export default defineNuxtConfig({
     },
     externals: {
       inline: ['drizzle-orm']
-    },
-    rollupConfig: {
-      plugins: [
-        {
-          name: 'fix-og-image-mock',
-          resolveId(id: string) {
-            if (id.includes('nuxt-og-image') && id.includes('proxy-cjs')) {
-              return { id: './node_modules/nuxt-og-image/dist/runtime/mock/proxy-cjs.js', external: false }
-            }
-          },
-        },
-      ],
-    },
+    }
   },
 
   app: {
     head: {
       htmlAttrs: { lang: 'en' },
       meta: [
-        { name: 'theme-color', content: '#0a0f1a' },
+        { name: 'theme-color', content: '#f5f1e8' },
       ],
       link: [
         { rel: 'icon', type: 'image/svg+xml', href: '/favicon.svg' },
