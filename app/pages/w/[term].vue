@@ -203,20 +203,12 @@ async function copySenseLink(index: number) {
             iMessage Preview
           </h2>
           <div class="bg-[#e8e2d8] rounded-xl p-6 border border-[#d4c9b8]">
-            <div class="bg-white rounded-lg p-6 shadow-sm max-w-lg">
-              <div class="flex items-center gap-3 mb-3">
-                <span class="font-serif text-3xl font-bold text-[#1a2744]">{{ entry.term }}</span>
-                <span v-if="entry.senses[activeSenseIndex]?.pos" class="px-2 py-0.5 bg-[#f5f1e8] border border-[#d4c9b8] rounded text-xs font-semibold uppercase text-[#8a8078]">
-                  {{ entry.senses[activeSenseIndex].pos }}
-                </span>
-              </div>
-              <p class="font-serif text-lg text-[#2d3748] leading-relaxed">
-                {{ entry.senses[activeSenseIndex]?.gloss }}
-              </p>
-              <div class="mt-4 pt-3 border-t border-[#ece5d8]">
-                <span class="text-xs text-[#8a8078]">dictionary.nard.uk</span>
-              </div>
-            </div>
+            <img
+              :src="`/_og/d/c_OgImageDefaultTakumi,title_${encodeURIComponent(entry.term)},description_${encodeURIComponent(entry.senses[activeSenseIndex]?.gloss || '')},pos_${encodeURIComponent(entry.senses[activeSenseIndex]?.pos || '')}.png`"
+              :alt="`OG image preview for ${entry.term}`"
+              class="rounded-lg shadow-sm max-w-lg w-full"
+              loading="lazy"
+            />
           </div>
         </section>
 
