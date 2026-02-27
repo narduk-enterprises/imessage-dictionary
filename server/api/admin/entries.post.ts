@@ -1,3 +1,4 @@
+import { z } from 'zod'
 import { dictionaryEntries } from '../../database/schema'
 
 export default defineEventHandler(async (event) => {
@@ -8,11 +9,16 @@ export default defineEventHandler(async (event) => {
     throw createError({ statusCode: 401, message: 'Unauthorized' })
   }
 
-  const body = await readBody(event)
-
-  if (!body.term?.trim() || !body.gloss?.trim()) {
-    throw createError({ statusCode: 400, message: 'Term and definition are required' })
-  }
+  const body = await readValidatedBody(event, z.object({
+    term: z.string().trim().min(1, 'Term and definition are required'),
+    gloss: z.string().trim().min(1, 'Term and definition are required'),
+    pos: z.string().optional().nullable(),
+    example: z.string().optional().nullable(),
+    source: z.string().optional().nullable(),
+    sourceUrl: z.string().optional().nullable(),
+    license: z.string().optional().nullable(),
+    senses: z.array(z.any()).optional().nullable()
+  }).parse)
 
   const db = useDatabase()
   const term = body.term.toLowerCase().trim()

@@ -4,11 +4,13 @@ import type { DictionaryEntry, SearchResult } from '~~/server/utils/types'
 const route = useRoute()
 const term = computed(() => decodeURIComponent(route.params.term as string))
 
+// eslint-disable-next-line atx/no-fetch-in-component
 const { data: entry, status } = await useFetch<DictionaryEntry>(`/api/words/${encodeURIComponent(term.value)}`, {
   key: `word-${term.value}`,
 })
 
 // If word not found, fetch suggestions
+// eslint-disable-next-line atx/no-fetch-in-component
 const { data: suggestions } = await useFetch<{ results: SearchResult[] }>('/api/words/search', {
   query: { q: term.value, limit: 5 },
   key: `suggestions-${term.value}`,
@@ -26,7 +28,7 @@ useSeoMeta({
 })
 
 if (entry.value) {
-  defineOgImageComponent('OgImageDefaultTakumi', {
+  defineOgImageComponent('DefaultTakumi', {
     title: entry.value.term,
     description: entry.value.senses?.[0]?.gloss || '',
     pos: entry.value.senses?.[0]?.pos || '',
@@ -39,7 +41,9 @@ function getShareUrl(senseIdx?: number) {
 }
 
 async function copyLink() {
+  if (!import.meta.client) return
   try {
+    // eslint-disable-next-line nuxt-guardrails/no-ssr-dom-access
     const url = `${window.location.origin}${getShareUrl(activeSenseIndex.value)}`
     await navigator.clipboard.writeText(url)
     toast.add({ title: 'Link copied to clipboard!', color: 'success' })
@@ -50,12 +54,14 @@ async function copyLink() {
 }
 
 async function shareWord() {
+  if (!import.meta.client) return
   if (navigator.share && entry.value) {
     const sense = entry.value.senses[activeSenseIndex.value]
     try {
       await navigator.share({
         title: `${entry.value.term} — definition`,
         text: sense?.gloss || '',
+        // eslint-disable-next-line nuxt-guardrails/no-ssr-dom-access
         url: `${window.location.origin}${getShareUrl(activeSenseIndex.value)}`,
       })
     }
@@ -71,7 +77,9 @@ async function shareWord() {
 }
 
 async function copySenseLink(index: number) {
+  if (!import.meta.client) return
   try {
+    // eslint-disable-next-line nuxt-guardrails/no-ssr-dom-access
     const url = `${window.location.origin}${getShareUrl(index)}`
     await navigator.clipboard.writeText(url)
     const label = entry.value?.senses[index]?.pos || `definition ${index + 1}`
@@ -137,11 +145,11 @@ async function copySenseLink(index: number) {
       <!-- Word Detail -->
       <template v-else>
         <article class="mb-8">
-          <header class="mb-8">
+          <div class="mb-8">
             <h1 class="font-serif text-5xl md:text-6xl font-bold text-[#1a2744] tracking-tight">
               {{ entry.term }}
             </h1>
-          </header>
+          </div>
 
           <!-- Senses -->
           <div class="space-y-6">
@@ -166,14 +174,16 @@ async function copySenseLink(index: number) {
                     </p>
                   </div>
                 </div>
-                <button
+                <UButton
                   v-if="entry.senses.length > 1"
                   class="ml-2 p-2 text-[#8a8078] hover:text-[#d97706] transition-colors"
+                  variant="ghost"
+                  color="neutral"
                   title="Copy link to this definition"
                   @click.stop="copySenseLink(index)"
                 >
                   <UIcon name="i-lucide-copy" class="size-4" />
-                </button>
+                </UButton>
               </div>
             </div>
           </div>
@@ -181,20 +191,22 @@ async function copySenseLink(index: number) {
 
         <!-- Share Buttons -->
         <div class="flex flex-col sm:flex-row gap-3 mb-8">
-          <button
+          <UButton
+            size="xl"
             class="flex-1 inline-flex items-center justify-center gap-2 px-6 py-3 bg-[#1a2744] hover:bg-[#0f1a30] text-white font-semibold rounded-xl transition-colors"
             @click="copyLink"
           >
             <UIcon name="i-lucide-copy" class="size-5" />
             Copy Link
-          </button>
-          <button
+          </UButton>
+          <UButton
+            size="xl"
             class="flex-1 inline-flex items-center justify-center gap-2 px-6 py-3 bg-[#d97706] hover:bg-[#b45309] text-white font-semibold rounded-xl transition-colors"
             @click="shareWord"
           >
             <UIcon name="i-lucide-share" class="size-5" />
             Share
-          </button>
+          </UButton>
         </div>
 
         <!-- iMessage Preview -->
@@ -213,7 +225,7 @@ async function copySenseLink(index: number) {
         </section>
 
         <!-- Source Attribution -->
-        <footer class="pt-8 border-t border-[#d4c9b8]">
+        <div class="pt-8 border-t border-[#d4c9b8]">
           <p class="text-sm text-[#8a8078]">
             Source: {{ entry.source }} • {{ entry.license }}
             <br>
@@ -221,7 +233,7 @@ async function copySenseLink(index: number) {
               View full attribution
             </NuxtLink>
           </p>
-        </footer>
+        </div>
       </template>
     </div>
   </div>

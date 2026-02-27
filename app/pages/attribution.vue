@@ -17,7 +17,7 @@ useSeoMeta({
         Back to Home
       </UButton>
 
-      <h1 class="font-serif text-4xl font-bold text-[var(--color-primary-500)] mb-8">
+      <h1 class="font-serif text-4xl font-bold text-primary-500 mb-8">
         Attribution & Licenses
       </h1>
 
@@ -31,7 +31,7 @@ useSeoMeta({
           <p class="mb-3">
             Definitions are sourced from multiple open-access dictionaries and curated datasets, primarily:
           </p>
-          <ul class="list-disc list-inside space-y-2 text-[var(--color-neutral-600)] dark:text-[var(--color-neutral-400)]">
+          <ul class="list-disc list-inside space-y-2 text-muted">
             <li><strong>Wiktionary</strong> — Licensed under CC BY-SA 4.0</li>
             <li><strong>WordNet</strong> (Princeton University) — BSD License</li>
             <li>Custom curated entries — CC BY-SA 4.0</li>
@@ -44,7 +44,7 @@ useSeoMeta({
               Technology
             </h2>
           </template>
-          <ul class="list-disc list-inside space-y-2 text-[var(--color-neutral-600)] dark:text-[var(--color-neutral-400)]">
+          <ul class="list-disc list-inside space-y-2 text-muted">
             <li><strong>Nuxt 4</strong> — Vue.js framework for web applications</li>
             <li><strong>Nuxt UI 4</strong> — UI component library</li>
             <li><strong>Cloudflare Workers</strong> — Edge deployment</li>
@@ -66,12 +66,12 @@ useSeoMeta({
         </UCard>
       </div>
 
-      <footer class="mt-12 pt-8 border-t border-[var(--color-neutral-200)] dark:border-[var(--color-neutral-800)] text-center">
-        <p class="text-sm text-[var(--color-neutral-500)]">
+      <div class="mt-12 pt-8 border-t border-default text-center">
+        <p class="text-sm text-muted">
           Built with ❤️ by
-          <a href="https://nard.uk" class="text-[var(--color-primary-500)] hover:underline">Narduk Enterprises</a>
+          <ULink to="https://nard.uk" class="text-primary-500 hover:underline">Narduk Enterprises</ULink>
         </p>
-      </footer>
+      </div>
     </div>
   </div>
 </template>

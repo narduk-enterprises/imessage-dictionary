@@ -125,10 +125,10 @@ export function useSeo(options: SeoOptions) {
 
   // --- Dynamic OG Image ---
   if (ogImage) {
-    defineOgImageComponent('OgImageDefault', {
+    defineOgImageComponent('DefaultTakumi', {
       title: ogImage.title || title,
       description: ogImage.description || description,
-      icon: ogImage.icon || 'i-lucide-sparkles',
+      pos: ogImage.icon || '', // 'icon' is unused in OgImageDefault.takumi, 'pos' is more accurate.
     })
   }
 }

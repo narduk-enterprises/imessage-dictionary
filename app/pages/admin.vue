@@ -32,6 +32,7 @@ async function handleSubmit() {
   }
 
   try {
+    // eslint-disable-next-line atx/no-fetch-in-component
     await $fetch('/api/admin/entries', {
       method: 'POST',
       headers: { Authorization: `Bearer ${passwordInput.value}` },
@@ -82,10 +83,10 @@ useSeoMeta({
       <!-- Login Form -->
       <template v-if="!isAuthenticated">
         <UCard class="max-w-md mx-auto">
-          <h1 class="font-serif text-3xl font-bold text-[var(--color-primary-500)] mb-6">
+          <h1 class="font-serif text-3xl font-bold text-primary-500 mb-6">
             Admin Access
           </h1>
-          <form class="space-y-4" @submit.prevent="handleLogin">
+          <UForm :state="{ passwordInput }" class="space-y-4" @submit="handleLogin">
             <UFormField label="Admin Token">
               <UInput
                 v-model="passwordInput"
@@ -96,17 +97,17 @@ useSeoMeta({
             <UButton type="submit" block>
               Login
             </UButton>
-          </form>
+          </UForm>
         </UCard>
       </template>
 
       <!-- Admin Panel -->
       <template v-else>
         <div class="mb-8">
-          <h1 class="font-serif text-4xl font-bold text-[var(--color-primary-500)] mb-2">
+          <h1 class="font-serif text-4xl font-bold text-primary-500 mb-2">
             Dictionary Admin
           </h1>
-          <p class="text-lg text-[var(--color-neutral-500)]">
+          <p class="text-lg text-muted">
             Add or update dictionary entries
           </p>
         </div>
@@ -119,7 +120,7 @@ useSeoMeta({
             </div>
           </template>
 
-          <form class="space-y-6" @submit.prevent="handleSubmit">
+          <UForm :state="form" class="space-y-6" @submit="handleSubmit">
             <div class="grid md:grid-cols-2 gap-6">
               <UFormField label="Term *">
                 <UInput
@@ -176,7 +177,7 @@ useSeoMeta({
             <UButton type="submit" size="lg" icon="i-lucide-check" block>
               Save Entry
             </UButton>
-          </form>
+          </UForm>
         </UCard>
       </template>
     </div>

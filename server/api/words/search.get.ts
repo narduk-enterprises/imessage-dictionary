@@ -1,9 +1,14 @@
+import { z } from 'zod'
 import { searchDictionary } from '~~/server/utils/dictionary'
 
 export default defineEventHandler(async (event) => {
-  const query = getQuery(event)
-  const q = (query.q as string) || ''
-  const limit = Math.min(Number(query.limit) || 20, 50)
+  const querySchema = z.object({
+    q: z.string().default(''),
+    limit: z.coerce.number().default(20)
+  })
+  const query = await getValidatedQuery(event, querySchema.parse)
+  const q = query.q
+  const limit = Math.min(query.limit, 50)
 
   const db = useDatabase()
   const results = await searchDictionary(db, q, limit)

@@ -7,6 +7,11 @@ let searchTimeout: ReturnType<typeof setTimeout> | null = null
 
 const popularWords = ['serendipity', 'ephemeral', 'eloquent', 'paradigm', 'ubiquitous', 'resilient', 'empathy', 'innovative']
 
+function clearSearch() {
+  query.value = ''
+  results.value = []
+}
+
 watch(query, (val) => {
   if (searchTimeout) clearTimeout(searchTimeout)
   if (!val.trim()) {
@@ -14,17 +19,18 @@ watch(query, (val) => {
     return
   }
   searchTimeout = setTimeout(async () => {
-    const { data } = await useFetch('/api/words/search', {
+    // eslint-disable-next-line atx/no-fetch-in-component
+    const data = await $fetch<{ results: SearchResult[] }>('/api/words/search', {
       query: { q: val, limit: 10 },
-      key: `search-${val}`,
     })
-    if (data.value) {
-      results.value = data.value.results
+    if (data) {
+      results.value = data.results
     }
   }, 150)
 })
 
 async function goToRandom() {
+  // eslint-disable-next-line atx/no-fetch-in-component
   const data = await $fetch('/api/words/random')
   if (data?.term) {
     navigateTo(`/w/${encodeURIComponent(data.term)}`)
@@ -36,7 +42,7 @@ useSeoMeta({
   description: 'Look up words and share beautiful OG preview cards in iMessage. Over 200 curated definitions with one-tap sharing.',
 })
 
-defineOgImageComponent('OgImageDefaultTakumi', {
+defineOgImageComponent('DefaultTakumi', {
   title: 'Free Dictionary',
   description: 'Share beautiful word definitions in iMessage',
 })
@@ -46,7 +52,7 @@ defineOgImageComponent('OgImageDefaultTakumi', {
   <div class="min-h-screen">
     <div class="max-w-4xl mx-auto px-6 py-12">
       <!-- Header -->
-      <header class="text-center mb-12">
+      <div class="text-center mb-12">
         <div class="flex items-center justify-center gap-3 mb-4">
           <UIcon name="i-lucide-book-open" class="text-[#1a2744] size-12" />
           <h1 class="font-serif text-5xl md:text-6xl font-bold text-[#1a2744] tracking-tight">
@@ -56,7 +62,7 @@ defineOgImageComponent('OgImageDefaultTakumi', {
         <p class="text-xl text-[#6b5e50]">
           Share beautiful word definitions in iMessage
         </p>
-      </header>
+      </div>
 
       <!-- Search -->
       <div class="mb-8">
@@ -79,7 +85,7 @@ defineOgImageComponent('OgImageDefaultTakumi', {
             :key="entry.term"
             :to="`/w/${encodeURIComponent(entry.term)}`"
             class="block px-5 py-3 hover:bg-[#f5f1e8] transition-colors border-b border-[#ece5d8] last:border-b-0"
-            @click="query = ''; results = []"
+            @click="clearSearch"
           >
             <div class="font-serif font-semibold text-lg text-[#1a2744]">
               {{ entry.term }}
@@ -93,13 +99,14 @@ defineOgImageComponent('OgImageDefaultTakumi', {
 
       <!-- Random Word Button -->
       <div class="flex justify-center mb-16">
-        <button
+        <UButton
+          size="xl"
           class="inline-flex items-center gap-2 px-8 py-3 bg-[#d97706] hover:bg-[#b45309] text-white font-semibold rounded-xl transition-colors shadow-sm"
           @click="goToRandom"
         >
           <UIcon name="i-lucide-shuffle" class="size-5" />
           Random Word
-        </button>
+        </UButton>
       </div>
 
       <!-- Popular Words Grid -->
@@ -122,7 +129,7 @@ defineOgImageComponent('OgImageDefaultTakumi', {
       </section>
 
       <!-- Footer -->
-      <footer class="mt-16 pt-8 border-t border-[#d4c9b8] text-center">
+      <div class="mt-16 pt-8 border-t border-[#d4c9b8] text-center">
         <p class="text-sm text-[#8a8078]">
           All definitions from Demo Dataset under CC BY-SA 4.0
           <br>
@@ -130,7 +137,7 @@ defineOgImageComponent('OgImageDefaultTakumi', {
             View full attribution
           </NuxtLink>
         </p>
-      </footer>
+      </div>
     </div>
   </div>
 </template>
