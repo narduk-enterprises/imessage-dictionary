@@ -1,5 +1,5 @@
 {
-  "name": "nuxt-v4-template",
+  "name": "imessage-dictionary",
   "type": "module",
   "private": true,
   "version": "1.0.0",
@@ -16,7 +16,7 @@
     "lint": "eslint .",
     "quality": "pnpm run lint && pnpm run typecheck",
     "db:generate": "drizzle-kit generate",
-    "db:migrate": "wrangler d1 execute nuxt-v4-template-db --local --file=drizzle/0000_initial_schema.sql",
+    "db:migrate": "wrangler d1 execute imessage-dictionary-db --local --file=drizzle/0000_initial_schema.sql",
     "db:studio": "drizzle-kit studio",
     "init": "npx jiti tools/init.ts"
   },
@@ -44,6 +44,8 @@
     "drizzle-kit": "^0.31.9",
     "eslint": "^9.39.3",
     "eslint-config-prettier": "^10.1.8",
+    "google-auth-library": "^10.6.1",
+    "googleapis": "^171.4.0",
     "prettier": "^3.8.1",
     "typescript-eslint": "^8.56.1",
     "vue-eslint-parser": "^10.4.0",

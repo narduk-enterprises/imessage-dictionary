@@ -1,6 +1,6 @@
 {
   "$schema": "https://raw.githubusercontent.com/cloudflare/workers-sdk/main/packages/wrangler/schemas/config/wrangler.json",
-  "name": "nuxt-v4-template",
+  "name": "imessage-dictionary",
   "main": ".output/server/index.mjs",
   "assets": {
     "directory": ".output/public"
@@ -13,8 +13,11 @@
   "d1_databases": [
     {
       "binding": "DB",
-      "database_name": "nuxt-v4-template-db",
-      "database_id": "83b9f319-c34e-4625-9c08-1eb384d9d36d"
+      "database_name": "imessage-dictionary-db",
+      "database_id": "7f4b25dc-df31-4bb6-bd51-0cb087cb5201"
     }
+  ],
+  "routes": [
+    { "pattern": "dict.nard.uk", "custom_domain": true }
   ]
 }

@@ -28,13 +28,14 @@ export default defineNuxtConfig({
 
   runtimeConfig: {
     // Server-only (admin API routes)
+    adminToken: process.env.ADMIN_TOKEN || '',
     googleServiceAccountKey: process.env.GSC_SERVICE_ACCOUNT_JSON || '',
     posthogApiKey: process.env.POSTHOG_PERSONAL_API_KEY || '',
     gaPropertyId: process.env.GA_PROPERTY_ID || '',
     posthogProjectId: process.env.POSTHOG_PROJECT_ID || '',
     public: {
-      appUrl: process.env.SITE_URL || 'https://nuxt-v4-template.workers.dev',
-      appName: process.env.APP_NAME || 'Nuxt 4 Demo',
+      appUrl: process.env.SITE_URL || 'https://dict.nard.uk',
+      appName: process.env.APP_NAME || 'iMessage Dictionary',
       // Analytics
       posthogPublicKey: process.env.POSTHOG_PUBLIC_KEY || '',
       posthogHost: process.env.POSTHOG_HOST || 'https://us.i.posthog.com',
@@ -51,9 +52,9 @@ export default defineNuxtConfig({
   // these via the `useSeo()` composable.
 
   site: {
-    url: process.env.SITE_URL || 'https://nuxt-v4-template.workers.dev',
-    name: 'Nuxt 4 Demo',
-    description: 'A production-ready demo template showcasing Nuxt 4, Nuxt UI 4, Tailwind CSS 4, and Cloudflare Workers with D1 database.',
+    url: process.env.SITE_URL || 'https://dict.nard.uk',
+    name: 'iMessage Dictionary',
+    description: 'Look up words and share beautiful OG preview cards in iMessage. Over 200 curated definitions with one-tap sharing.',
     defaultLocale: 'en',
   },
 
@@ -66,8 +67,8 @@ export default defineNuxtConfig({
   schemaOrg: {
     identity: {
       type: 'Organization',
-      name: 'Nuxt 4 Demo',
-      url: process.env.SITE_URL || 'https://nuxt-v4-template.workers.dev',
+      name: 'iMessage Dictionary',
+      url: process.env.SITE_URL || 'https://imessage-dictionary.workers.dev',
       logo: '/favicon.svg',
     },
   },
@@ -75,7 +76,7 @@ export default defineNuxtConfig({
   image: {
     provider: 'cloudflare',
     cloudflare: {
-      baseURL: process.env.SITE_URL || 'https://nuxt-v4-template.workers.dev',
+      baseURL: process.env.SITE_URL || 'https://imessage-dictionary.workers.dev',
     },
   },
 

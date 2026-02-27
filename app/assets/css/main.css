@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Crimson+Pro:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap');
 
 @import 'tailwindcss';
 @import '@nuxt/ui';
@@ -6,7 +6,20 @@
 @theme {
   /* Typography */
   --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
-  --font-display: 'Outfit', system-ui, sans-serif;
+  --font-serif: 'Crimson Pro', Georgia, serif;
+  --font-display: 'Crimson Pro', Georgia, serif;
+
+  /* Amber primary color palette */
+  --color-primary-50: oklch(0.98 0.015 85);
+  --color-primary-100: oklch(0.96 0.03 80);
+  --color-primary-200: oklch(0.9 0.06 78);
+  --color-primary-300: oklch(0.82 0.1 76);
+  --color-primary-400: oklch(0.76 0.13 75);
+  --color-primary-500: oklch(0.72 0.15 75);
+  --color-primary-600: oklch(0.6 0.14 72);
+  --color-primary-700: oklch(0.48 0.12 70);
+  --color-primary-800: oklch(0.38 0.09 68);
+  --color-primary-900: oklch(0.28 0.05 250);
 }
 
 body {
@@ -17,8 +30,9 @@ h1,
 h2,
 h3,
 h4,
-.font-display {
-  font-family: var(--font-display);
+.font-display,
+.font-serif {
+  font-family: var(--font-serif);
 }
 
 /* Animated gradient background */
