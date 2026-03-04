@@ -1,38 +1,67 @@
 {
   "name": "imessage-dictionary",
-  "version": "1.0.2",
+  "type": "module",
   "private": true,
-  "packageManager": "pnpm@10.28.0",
+  "version": "1.0.3",
   "scripts": {
-    "predev": "node tools/check-setup.cjs",
-    "dev": "pnpm --filter web dev",
-    "prebuild": "node tools/check-setup.cjs",
-    "build": "doppler run -- pnpm -r build",
-    "predeploy": "node tools/check-setup.cjs",
-    "deploy": "doppler run -- pnpm --filter web run deploy",
-    "postinstall": "node -e \"if(!require('fs').existsSync('.setup-complete'))console.log('\\n⚠️  Run pnpm run setup before doing anything else! See AGENTS.md.\\n')\"",
-    "build:plugins": "pnpm --filter @narduk/eslint-config build",
-    "prelint": "pnpm run build:plugins",
-    "lint": "pnpm run prelint && turbo run lint",
-    "typecheck": "turbo run typecheck",
-    "quality": "turbo run quality",
-    "setup": "npx tsx tools/init.ts",
-    "update-layer": "npx tsx tools/update-layer.ts",
-    "sync-template": "npx tsx tools/sync-template.ts",
-    "migrate-to-org": "npx tsx tools/migrate-to-org.ts",
-    "validate": "doppler run -- npx tsx tools/validate.ts",
+    "build": "nuxt build",
+    "dev": "nuxt dev",
+    "generate": "nuxt generate",
+    "preview": "nuxt preview",
+    "postinstall": "nuxt prepare && pnpm run build:plugins",
+    "typecheck": "npx nuxt typecheck",
+    "deploy": "nuxt build && wrangler deploy",
     "generate:favicons": "npx tsx tools/generate-favicons.ts",
-    "db:migrate": "pnpm --filter web run db:migrate"
+    "prelint": "(test -f .nuxt/eslint.config.mjs || nuxt prepare) && (test -f eslint-plugin-nuxt-ui/dist/index.js || pnpm run build:plugins)",
+    "lint": "eslint .",
+    "quality": "pnpm run lint && pnpm run typecheck",
+    "db:generate": "drizzle-kit generate",
+    "db:migrate": "wrangler d1 execute imessage-dictionary-db --local --file=drizzle/0000_initial_schema.sql",
+    "db:studio": "drizzle-kit studio",
+    "init": "npx jiti tools/init.ts",
+    "build:plugins": "cd eslint-plugin-nuxt-ui && pnpm run build && cd ../eslint-plugin-nuxt-guardrails && pnpm run build && cd ../tools/eslint-plugin-vue-official-best-practices && pnpm run build",
+    "predev": "node tools/check-setup.cjs",
+    "prebuild": "node tools/check-setup.cjs",
+    "predeploy": "node tools/check-setup.cjs",
+    "update-layer": "npx tsx tools/update-layer.ts"
+  },
+  "dependencies": {
+    "@nuxt/image": "^2.0.0",
+    "@nuxt/ui": "^4.3.0",
+    "@nuxtjs/seo": "^3.4.0",
+    "@takumi-rs/core": "^0.69.2",
+    "drizzle-orm": "^0.45.1",
+    "jose": "^6.1.3",
+    "nuxt": "^4.3.0",
+    "posthog-js": "^1.205.0",
+    "tailwindcss": "^4.1.18",
+    "vue": "^3.5.27",
+    "vue-router": "^4.6.4",
+    "zod": "^4.3.6"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "^4.20250620.0",
+    "@iconify-json/lucide": "^1.2.94",
+    "@nuxt/eslint": "^1.15.2",
+    "@nuxt/fonts": "^0.14.0",
+    "@takumi-rs/wasm": "^0.69.2",
+    "@types/node": "^22.15.0",
+    "drizzle-kit": "^0.31.9",
+    "eslint": "^9.39.3",
+    "eslint-config-prettier": "^10.1.8",
+    "google-auth-library": "^10.6.1",
+    "googleapis": "^171.4.0",
+    "nuxt-og-image": "6.0.0-beta.40",
+    "prettier": "^3.8.1",
+    "typescript-eslint": "^8.56.1",
+    "vue-eslint-parser": "^10.4.0",
+    "wrangler": "^4.20.0",
+    "tsup": "^8.5.1",
+    "tsx": "^4.0.0"
   },
   "pnpm": {
-    "overrides": {
-      "nuxt-og-image": "6.0.0-beta.42",
-      "esbuild": ">=0.25.0",
-      "serialize-javascript": ">=7.0.3"
-    },
     "onlyBuiltDependencies": [
       "@parcel/watcher",
-      "better-sqlite3",
       "core-js",
       "esbuild",
       "protobufjs",
@@ -42,12 +71,12 @@
       "workerd"
     ]
   },
-  "volta": {
-    "node": "22.22.0"
+  "overrides": {
+    "@cloudflare/unenv-preset": "2.12.1",
+    "vite": "npm:rolldown-vite@latest"
   },
-  "devDependencies": {
-    "@types/node": "^22.19.13",
-    "tsx": "^4.21.0",
-    "turbo": "^2.8.12"
-  }
+  "volta": {
+    "node": "22.14.0"
+  },
+  "packageManager": "pnpm@10.28.0"
 }
