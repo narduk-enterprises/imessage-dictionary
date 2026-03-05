@@ -76,7 +76,7 @@ export function useSeo(options: SeoOptions) {
   } = options
 
   // --- Core meta tags ---
-  const seoMeta: Record<string, any> = {
+  const seoMeta: Record<string, unknown> = {
     title,
     description,
     ogTitle: title,
@@ -113,7 +113,7 @@ export function useSeo(options: SeoOptions) {
   useSeoMeta(seoMeta)
 
   // --- Head extras ---
-  const headConfig: Record<string, any> = {}
+  const headConfig: Record<string, unknown> = {}
 
   if (canonicalUrl) {
     headConfig.link = [{ rel: 'canonical', href: canonicalUrl }]

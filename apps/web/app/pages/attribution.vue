@@ -1,8 +1,10 @@
 <script setup lang="ts">
-useSeoMeta({
+useSeo({
   title: 'Attribution — iMessage Dictionary',
   description: 'Data sources, licenses, and credits for the iMessage Dictionary project.',
 })
+
+useWebPageSchema({ name: 'Attribution & Licenses', type: 'AboutPage' })
 </script>
 
 <template>

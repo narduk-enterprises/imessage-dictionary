@@ -32,15 +32,16 @@ async function goToRandom() {
   }
 }
 
-useSeoMeta({
+useSeo({
   title: 'iMessage Dictionary — Share Beautiful Word Definitions',
   description: 'Look up words and share beautiful OG preview cards in iMessage. Over 200 curated definitions with one-tap sharing.',
+  ogImage: {
+    title: 'Free Dictionary',
+    description: 'Share beautiful word definitions in iMessage',
+  },
 })
 
-defineOgImageComponent('DefaultTakumi', {
-  title: 'Free Dictionary',
-  description: 'Share beautiful word definitions in iMessage',
-})
+useWebPageSchema({ name: 'iMessage Dictionary', type: 'SearchResultsPage' })
 </script>
 
 <template>

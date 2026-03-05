@@ -60,10 +60,13 @@ onMounted(() => {
   }
 })
 
-useSeoMeta({
+useSeo({
   title: 'Admin — iMessage Dictionary',
+  description: 'Admin panel for managing iMessage Dictionary entries.',
   robots: 'noindex, nofollow',
 })
+
+useWebPageSchema({ name: 'Admin', type: 'WebPage' })
 </script>
 
 <template>

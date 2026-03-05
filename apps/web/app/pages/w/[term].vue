@@ -21,11 +21,12 @@ const activeSenseIndex = ref(0)
 const toast = useToast()
 
 // Set SEO meta dynamically
-useSeoMeta({
-  title: () => entry.value ? `${entry.value.term} — iMessage Dictionary` : `${term.value} — Word not found`,
-  description: () => entry.value?.senses?.[0]?.gloss || `Definition for ${term.value}`,
-  twitterCard: 'summary_large_image',
+useSeo({
+  title: entry.value ? `${entry.value.term} — iMessage Dictionary` : `${term.value} — Word not found`,
+  description: entry.value?.senses?.[0]?.gloss || `Definition for ${term.value}`,
 })
+
+useWebPageSchema({ name: entry.value?.term || term.value, type: 'ItemPage' })
 
 if (entry.value) {
   defineOgImageComponent('DefaultTakumi', {
@@ -43,7 +44,6 @@ function getShareUrl(senseIdx?: number) {
 async function copyLink() {
   if (!import.meta.client) return
   try {
-    // eslint-disable-next-line nuxt-guardrails/no-ssr-dom-access
     const url = `${window.location.origin}${getShareUrl(activeSenseIndex.value)}`
     await navigator.clipboard.writeText(url)
     toast.add({ title: 'Link copied to clipboard!', color: 'success' })
@@ -79,7 +79,6 @@ async function shareWord() {
 async function copySenseLink(index: number) {
   if (!import.meta.client) return
   try {
-    // eslint-disable-next-line nuxt-guardrails/no-ssr-dom-access
     const url = `${window.location.origin}${getShareUrl(index)}`
     await navigator.clipboard.writeText(url)
     const label = entry.value?.senses[index]?.pos || `definition ${index + 1}`
@@ -89,6 +88,15 @@ async function copySenseLink(index: number) {
     toast.add({ title: 'Failed to copy link', color: 'error' })
   }
 }
+
+const ogPreviewSrc = computed(() => {
+  if (!entry.value) return ''
+  const sense = entry.value.senses[activeSenseIndex.value]
+  const titleParam = encodeURIComponent(entry.value.term)
+  const descParam = encodeURIComponent(sense?.gloss || '')
+  const posParam = encodeURIComponent(sense?.pos || '')
+  return `/_og/d/c_OgImageDefaultTakumi,title_${titleParam},description_${descParam},pos_${posParam}.png`
+})
 </script>
 
 <template>
@@ -216,7 +224,7 @@ async function copySenseLink(index: number) {
           </h2>
           <div class="bg-[#e8e2d8] rounded-xl p-6 border border-[#d4c9b8]">
             <img
-              :src="`/_og/d/c_OgImageDefaultTakumi,title_${encodeURIComponent(entry.term)},description_${encodeURIComponent(entry.senses[activeSenseIndex]?.gloss || '')},pos_${encodeURIComponent(entry.senses[activeSenseIndex]?.pos || '')}.png`"
+              :src="ogPreviewSrc"
               :alt="`OG image preview for ${entry.term}`"
               class="rounded-lg shadow-sm max-w-lg w-full"
               loading="lazy"
