@@ -10,7 +10,7 @@
     "preview": "nuxt preview",
     "postinstall": "node -e \"if(!require('fs').existsSync('.setup-complete'))console.log('\\n⚠️  Run pnpm run setup before doing anything else! See AGENTS.md.\\n')\"",
     "typecheck": "npx nuxt typecheck",
-    "deploy": "nuxt build && wrangler deploy",
+    "ship": "doppler run -- pnpm --filter web run deploy",
     "generate:favicons": "npx tsx tools/generate-favicons.ts",
     "prelint": "pnpm run build:plugins",
     "lint": "eslint .",
@@ -22,8 +22,9 @@
     "build:plugins": "pnpm --filter @narduk/eslint-config build",
     "predev": "node tools/check-setup.cjs",
     "prebuild": "node tools/check-setup.cjs",
-    "predeploy": "node tools/check-setup.cjs",
-    "update-layer": "npx tsx tools/update-layer.ts"
+    "preship": "node tools/check-setup.cjs",
+    "update-layer": "npx tsx tools/update-layer.ts",
+    "predeploy": "node tools/check-setup.cjs"
   },
   "dependencies": {
     "@nuxt/image": "^2.0.0",
