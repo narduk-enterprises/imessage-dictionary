@@ -34,6 +34,11 @@ export default defineNuxtConfig({
   },
 
   runtimeConfig: {
+    session: {
+      password:
+        process.env.NUXT_SESSION_PASSWORD ||
+        (import.meta.dev ? 'imessage-dictionary-dev-session-secret-min-32-chars' : ''),
+    },
     // Server-only (admin API routes)
     adminToken: process.env.ADMIN_TOKEN || '',
     googleServiceAccountKey: process.env.GSC_SERVICE_ACCOUNT_JSON || '',
