@@ -15,15 +15,14 @@ withDefaults(defineProps<{
   siteName: 'dictionary.nard.uk',
 })
 
-/* eslint-disable atx/no-inline-hex */
 const colors = {
-  bg: '#f5f0e8',
-  title: '#1a2744',
-  posBg: '#c49a6c',
-  posText: '#ffffff',
-  desc: '#2d3748',
-  divider: '#d4c9b8',
-  site: '#8a8078'
+  bg: 'rgb(245 240 232)',
+  title: 'rgb(26 39 68)',
+  posBg: 'rgb(196 154 108)',
+  posText: 'rgb(255 255 255)',
+  desc: 'rgb(45 55 72)',
+  divider: 'rgb(212 201 184)',
+  site: 'rgb(138 128 120)',
 }
 </script>
 

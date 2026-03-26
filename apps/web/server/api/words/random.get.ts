@@ -1,7 +1,8 @@
 import { getRandomEntry } from '~~/server/utils/dictionary'
+import { useAppDatabase } from '#server/utils/database'
 
 export default defineEventHandler(async (event) => {
-  const db = useDatabase(event)
+  const db = useAppDatabase(event)
   const entry = await getRandomEntry(db)
 
   if (!entry) {

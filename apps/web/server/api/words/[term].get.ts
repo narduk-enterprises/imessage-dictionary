@@ -1,4 +1,5 @@
 import { getEntryByTerm } from '~~/server/utils/dictionary'
+import { useAppDatabase } from '#server/utils/database'
 
 export default defineEventHandler(async (event) => {
   const term = getRouterParam(event, 'term')
@@ -6,7 +7,7 @@ export default defineEventHandler(async (event) => {
     throw createError({ statusCode: 400, message: 'Missing term parameter' })
   }
 
-  const db = useDatabase(event)
+  const db = useAppDatabase(event)
   const entry = await getEntryByTerm(db, decodeURIComponent(term))
 
   if (!entry) {

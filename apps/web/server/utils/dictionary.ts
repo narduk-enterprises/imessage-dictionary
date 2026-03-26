@@ -1,5 +1,6 @@
 import { like, sql } from 'drizzle-orm'
-import { dictionaryEntries } from '../database/schema'
+import { dictionaryEntries } from '#server/database/schema'
+import type { AppDatabase } from '#server/utils/database'
 import type { DictionaryEntry, SearchResult } from './types'
 
 type DbRow = typeof dictionaryEntries.$inferSelect
@@ -29,11 +30,11 @@ function rowToEntry(row: DbRow): DictionaryEntry {
 /**
  * Look up a single dictionary entry by term (case-insensitive)
  */
-export async function getEntryByTerm(db: ReturnType<typeof useDatabase>, term: string): Promise<DictionaryEntry | null> {
+export async function getEntryByTerm(db: AppDatabase, term: string): Promise<DictionaryEntry | null> {
   const normalized = term.trim().toLowerCase()
   if (!normalized) return null
 
-  const rows = await db.select()
+  const rows: DbRow[] = await db.select()
     .from(dictionaryEntries)
     .where(sql`lower(${dictionaryEntries.term}) = ${normalized}`)
     .limit(1)
@@ -45,19 +46,19 @@ export async function getEntryByTerm(db: ReturnType<typeof useDatabase>, term: s
 /**
  * Search dictionary entries with prefix + contains matching
  */
-export async function searchDictionary(db: ReturnType<typeof useDatabase>, query: string, limit = 20): Promise<SearchResult[]> {
+export async function searchDictionary(db: AppDatabase, query: string, limit = 20): Promise<SearchResult[]> {
   const normalized = query.trim().toLowerCase()
   if (!normalized) return []
 
   // Prefix matches first, then contains
-  const prefixRows = await db.select()
+  const prefixRows: DbRow[] = await db.select()
     .from(dictionaryEntries)
     .where(like(dictionaryEntries.term, `${normalized}%`))
     .limit(limit)
 
   const prefixTerms = new Set(prefixRows.map(r => r.term.toLowerCase()))
 
-  const containsRows = await db.select()
+  const containsRows: DbRow[] = await db.select()
     .from(dictionaryEntries)
     .where(like(dictionaryEntries.term, `%${normalized}%`))
     .limit(limit)
@@ -80,8 +81,8 @@ export async function searchDictionary(db: ReturnType<typeof useDatabase>, query
 /**
  * Get a random dictionary entry
  */
-export async function getRandomEntry(db: ReturnType<typeof useDatabase>): Promise<DictionaryEntry | null> {
-  const rows = await db.select()
+export async function getRandomEntry(db: AppDatabase): Promise<DictionaryEntry | null> {
+  const rows: DbRow[] = await db.select()
     .from(dictionaryEntries)
     .orderBy(sql`RANDOM()`)
     .limit(1)
