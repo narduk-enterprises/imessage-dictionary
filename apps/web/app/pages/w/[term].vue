@@ -1,24 +1,11 @@
 <script setup lang="ts">
-import type { DictionaryEntry, SearchResult } from '~~/server/utils/types'
-
 const route = useRoute()
 const term = computed(() => decodeURIComponent(route.params.term as string))
-
-// eslint-disable-next-line atx/no-fetch-in-component
-const { data: entry, status } = await useFetch<DictionaryEntry>(`/api/words/${encodeURIComponent(term.value)}`, {
-  key: `word-${term.value}`,
-})
-
-// If word not found, fetch suggestions
-// eslint-disable-next-line atx/no-fetch-in-component
-const { data: suggestions } = await useFetch<{ results: SearchResult[] }>('/api/words/search', {
-  query: { q: term.value, limit: 5 },
-  key: `suggestions-${term.value}`,
-  immediate: !entry.value,
-})
+const { entry, status, suggestions } = useWordDetails(term)
 
 const activeSenseIndex = ref(0)
 const toast = useToast()
+const requestUrl = useRequestURL()
 
 // Set SEO meta dynamically
 useSeo({
@@ -44,7 +31,7 @@ function getShareUrl(senseIdx?: number) {
 async function copyLink() {
   if (!import.meta.client) return
   try {
-    const url = `${window.location.origin}${getShareUrl(activeSenseIndex.value)}`
+    const url = new URL(getShareUrl(activeSenseIndex.value), requestUrl.origin).toString()
     await navigator.clipboard.writeText(url)
     toast.add({ title: 'Link copied to clipboard!', color: 'success' })
   }
@@ -61,8 +48,7 @@ async function shareWord() {
       await navigator.share({
         title: `${entry.value.term} — definition`,
         text: sense?.gloss || '',
-        // eslint-disable-next-line nuxt-guardrails/no-ssr-dom-access
-        url: `${window.location.origin}${getShareUrl(activeSenseIndex.value)}`,
+        url: new URL(getShareUrl(activeSenseIndex.value), requestUrl.origin).toString(),
       })
     }
     catch (err) {
@@ -79,7 +65,7 @@ async function shareWord() {
 async function copySenseLink(index: number) {
   if (!import.meta.client) return
   try {
-    const url = `${window.location.origin}${getShareUrl(index)}`
+    const url = new URL(getShareUrl(index), requestUrl.origin).toString()
     await navigator.clipboard.writeText(url)
     const label = entry.value?.senses[index]?.pos || `definition ${index + 1}`
     toast.add({ title: `Link to "${label}" copied!`, color: 'success' })
