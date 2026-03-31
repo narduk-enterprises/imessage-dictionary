@@ -39,7 +39,8 @@
     "test:e2e": "playwright test",
     "test:e2e:web": "pnpm --filter web test:e2e",
     "quality:check": "pnpm run guardrails:repo && turbo run quality --filter='./apps/*'",
-    "check": "pnpm run quality:check"
+    "check": "pnpm run quality:check",
+    "sync:github-skills": "pnpm exec tsx tools/sync-github-skills.ts"
   },
   "dependencies": {
     "@nuxt/image": "^2.0.0",

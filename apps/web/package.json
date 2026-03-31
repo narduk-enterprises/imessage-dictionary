@@ -11,7 +11,7 @@
     "generate": "nuxt generate",
     "preview": "nuxt preview",
     "typecheck": "nuxt typecheck",
-    "deploy": "nuxt build && wrangler deploy",
+    "deploy": "node ../../tools/web-deploy.cjs",
     "prelint": "test -f .nuxt/eslint.config.mjs || nuxt prepare",
     "lint": "eslint . --max-warnings 0",
     "quality": "echo 'Turbo dependsOn handles lint + typecheck + format:check'",
@@ -27,7 +27,9 @@
     "nuxt": "^4.3.1",
     "zod": "^4.3.6",
     "@takumi-rs/core": "^0.69.2",
-    "@narduk-enterprises/eslint-config": "^1.0.17"
+    "@narduk-enterprises/eslint-config": "^1.0.17",
+    "@supabase/auth-js": "^2.100.1",
+    "@supabase/supabase-js": "^2.100.1"
   },
   "devDependencies": {
     "@tailwindcss/vite": "^4.0.0",

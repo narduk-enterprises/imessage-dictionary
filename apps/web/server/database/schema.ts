@@ -11,3 +11,5 @@ export const dictionaryEntries = sqliteTable('dictionary_entries', {
   updatedAt: text('updated_at'),
   sensesJson: text('senses_json').notNull(),
 })
+
+export * from '#server/database/auth-bridge-schema'
